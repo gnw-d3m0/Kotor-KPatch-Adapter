@@ -4,8 +4,6 @@ on:
   push:
     tags:
       - "v*"
-    branches:
-      - "release-v0.1.0"
   workflow_dispatch:
     inputs:
       version:
@@ -33,10 +31,8 @@ jobs:
         run: |
           if ("${{ github.event_name }}" -eq "workflow_dispatch") {
             $version = "${{ inputs.version }}"
-          } elseif ("${{ github.ref_type }}" -eq "tag") {
-            $version = "${{ github.ref_name }}"
           } else {
-            $version = "v0.1.0"
+            $version = "${{ github.ref_name }}"
           }
 
           if (-not $version.StartsWith("v")) {
@@ -67,7 +63,7 @@ jobs:
             dist/KotorKPatchAdapter.exe
             dist/KotorKPatchAdapter-${{ steps.version.outputs.version }}.zip
 
-      - name: Create GitHub release
+      - name: Create or update GitHub release
         shell: pwsh
         env:
           GH_TOKEN: ${{ github.token }}
@@ -80,5 +76,5 @@ jobs:
           if ($LASTEXITCODE -eq 0) {
             gh release upload $version $exe $zip --clobber
           } else {
-            gh release create $version $exe $zip --target main --title "KOTOR KPatch Adapter $version" --notes "First public release of KOTOR KPatch Adapter. Download the EXE directly or use the ZIP containing the EXE, README, and license."
+            gh release create $version $exe $zip --target main --title "KOTOR KPatch Adapter $version" --generate-notes
           }
