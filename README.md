@@ -63,21 +63,37 @@ In that situation the patch needs manual review.
 
 1. Run `KotorKPatchAdapter.exe`.
 2. Select your current `swkotor.exe`.
-3. Select the root folder of Kotor Patch Manager. This is the folder that contains `sqlite3.dll`.
+3. Select the **root folder** of Kotor Patch Manager — the folder that contains the `bin`, `patches`, and `tools` folders. You can also select the `bin` folder directly if you prefer.
 4. Add the `.kpatch` file or files you want to check.
 5. Click **Analyze Compatibility**.
 6. Read the result for each patch.
 7. If the tool reports that everything is compatible, click **Convert & Update Patch Manager**.
 
-The Patch Manager folder should contain paths like these:
+For Kotor Patch Manager v0.6.2, the folder layout looks like this:
 
 ```text
-Kotor Patch Manager/
-├─ sqlite3.dll
-└─ bin/
-   └─ AddressDatabases/
-      └─ kotor1_0_3.db
+KotorPatchManager-v0.6.2/
+├─ bin/
+│  ├─ AddressDatabases/
+│  │  └─ kotor1_0_3.db
+│  ├─ KotorPatcher.dll
+│  ├─ KPatchLauncher.exe
+│  └─ sqlite3.dll
+├─ patches/
+│  └─ your-patches.kpatch
+├─ tools/
+│  └─ create-patch.bat
+└─ README.txt
 ```
+
+The important files for this adapter are:
+
+```text
+bin\sqlite3.dll
+bin\AddressDatabases\kotor1_0_3.db
+```
+
+Converted `.kpatch` files are created next to the original patch files you selected. You can then place them in Patch Manager's `patches` folder if they are not already there.
 
 ## Database backups
 
@@ -118,7 +134,7 @@ If the compiler is not available, open `KotorKPatchAdapter.csproj` in Visual Stu
 - checks `simple`, `replace`, `detour`, and `static` hooks
 - does not automatically relocate moved hooks
 - does not rebuild address tables for an EXE whose code layout has actually been rearranged
-- uses Patch Manager's existing `sqlite3.dll`
+- uses Patch Manager's existing `bin\sqlite3.dll`
 
 ## Safety
 
