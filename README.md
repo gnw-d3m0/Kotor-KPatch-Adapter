@@ -130,7 +130,7 @@ If the compiler is not available, open `KotorKPatchAdapter.csproj` in Visual Stu
 ## Current limitations
 
 - KOTOR 1 Windows x86 only
-- designed for the current Kotor Patch Manager `.kpatch` format
+- designed for `.kpatch` files made with **Kotor Patch Manager v0.6.2**
 - checks `simple`, `replace`, `detour`, and `static` hooks
 - does not automatically relocate moved hooks
 - does not rebuild address tables for an EXE whose code layout has actually been rearranged
