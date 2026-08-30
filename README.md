@@ -2,7 +2,7 @@
 
 KOTOR KPatch Adapter is a small Windows tool for people who use **KotOR Patch Manager** with a modified `swkotor.exe`.
 
-Some KOTOR mods change the game executable for things like widescreen resolutions or the 4 GB / Large Address Aware flag. Even when those changes do not touch the code a `.kpatch` needs, Patch Manager may reject the EXE because its SHA-256 hash no longer matches a version the patch knows about.
+Some KOTOR mods change the game executable for things like widescreen resolutions or the 4 GB patch. Even when those changes do not touch the code a `.kpatch` needs, Patch Manager may reject the EXE because its SHA-256 hash no longer matches a version the patch knows about.
 
 This tool checks whether the patch still matches your actual EXE. If it does, it can make a converted copy of the `.kpatch` for that EXE and update Patch Manager's existing KOTOR 1 address database so the new hash is recognized.
 
