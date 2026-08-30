@@ -138,7 +138,7 @@ namespace KotorKPatchAdapter
         {
             using (FolderBrowserDialog d = new FolderBrowserDialog())
             {
-                d.Description = "Select the Kotor Patch Manager folder (the folder containing sqlite3.dll).";
+                d.Description = "Select the Kotor Patch Manager root folder (the folder containing bin). Selecting the bin folder itself also works.";
                 if (d.ShowDialog(this) == DialogResult.OK) { managerBox.Text = d.SelectedPath; ResetAnalysis(); }
             }
         }
@@ -179,22 +179,34 @@ namespace KotorKPatchAdapter
             statusLabel.Text = "Selections changed. Analyze again.";
         }
 
+        private string ManagerBinPath
+        {
+            get
+            {
+                string selected = managerBox.Text.Trim();
+                if (File.Exists(System.IO.Path.Combine(selected, "sqlite3.dll")) &&
+                    Directory.Exists(System.IO.Path.Combine(selected, "AddressDatabases")))
+                    return selected;
+                return System.IO.Path.Combine(selected, "bin");
+            }
+        }
+
         private string DbPath
         {
-            get { return System.IO.Path.Combine(managerBox.Text.Trim(), "bin", "AddressDatabases", "kotor1_0_3.db"); }
+            get { return System.IO.Path.Combine(ManagerBinPath, "AddressDatabases", "kotor1_0_3.db"); }
         }
 
         private string SqlitePath
         {
-            get { return System.IO.Path.Combine(managerBox.Text.Trim(), "sqlite3.dll"); }
+            get { return System.IO.Path.Combine(ManagerBinPath, "sqlite3.dll"); }
         }
 
         private bool ValidateInputs()
         {
             if (!File.Exists(exeBox.Text.Trim())) { MessageBox.Show(this, "Select a valid swkotor.exe.", "Missing EXE", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
             if (!Directory.Exists(managerBox.Text.Trim())) { MessageBox.Show(this, "Select a valid Kotor Patch Manager folder.", "Missing Patch Manager", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
-            if (!File.Exists(DbPath)) { MessageBox.Show(this, "Could not find:\r\n" + DbPath, "Missing address database", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
-            if (!File.Exists(SqlitePath)) { MessageBox.Show(this, "Could not find:\r\n" + SqlitePath, "Missing sqlite3.dll", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
+            if (!File.Exists(DbPath)) { MessageBox.Show(this, "Could not find:\r\n" + DbPath + "\r\n\r\nSelect the Patch Manager root folder that contains bin, or select the bin folder itself.", "Missing address database", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
+            if (!File.Exists(SqlitePath)) { MessageBox.Show(this, "Could not find:\r\n" + SqlitePath + "\r\n\r\nIn Kotor Patch Manager v0.6.2, sqlite3.dll is inside the bin folder.", "Missing sqlite3.dll", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
             if (patchList.Items.Count == 0) { MessageBox.Show(this, "Add at least one .kpatch file.", "No patches", MessageBoxButtons.OK, MessageBoxIcon.Warning); return false; }
             return true;
         }
