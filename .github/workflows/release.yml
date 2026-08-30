@@ -1,0 +1,84 @@
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - "v*"
+    branches:
+      - "release-v0.1.0"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release version, for example v0.1.1"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Choose release version
+        id: version
+        shell: pwsh
+        run: |
+          if ("${{ github.event_name }}" -eq "workflow_dispatch") {
+            $version = "${{ inputs.version }}"
+          } elseif ("${{ github.ref_type }}" -eq "tag") {
+            $version = "${{ github.ref_name }}"
+          } else {
+            $version = "v0.1.0"
+          }
+
+          if (-not $version.StartsWith("v")) {
+            $version = "v$version"
+          }
+
+          "version=$version" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Build Release x86
+        shell: pwsh
+        run: msbuild KotorKPatchAdapter.csproj /m /p:Configuration=Release /p:Platform=x86
+
+      - name: Package release
+        shell: pwsh
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item "bin\Release\KotorKPatchAdapter.exe" "dist\KotorKPatchAdapter.exe"
+          Copy-Item "README.md" "dist\README.md"
+          Copy-Item "LICENSE" "dist\LICENSE"
+          Compress-Archive -Path "dist\KotorKPatchAdapter.exe", "dist\README.md", "dist\LICENSE" -DestinationPath "dist\KotorKPatchAdapter-$version.zip" -Force
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: KotorKPatchAdapter-${{ steps.version.outputs.version }}
+          path: |
+            dist/KotorKPatchAdapter.exe
+            dist/KotorKPatchAdapter-${{ steps.version.outputs.version }}.zip
+
+      - name: Create GitHub release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $version = "${{ steps.version.outputs.version }}"
+          $zip = "dist\KotorKPatchAdapter-$version.zip"
+          $exe = "dist\KotorKPatchAdapter.exe"
+
+          gh release view $version 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $version $exe $zip --clobber
+          } else {
+            gh release create $version $exe $zip --target main --title "KOTOR KPatch Adapter $version" --notes "First public release of KOTOR KPatch Adapter. Download the EXE directly or use the ZIP containing the EXE, README, and license."
+          }
