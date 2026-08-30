@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+*.exe
+*.pdb
+*.user
+*.suo
+*.db
+*.db.bak-*
+*.kpatch
