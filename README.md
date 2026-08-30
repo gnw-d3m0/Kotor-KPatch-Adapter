@@ -6,6 +6,14 @@ Some KOTOR mods change the game executable for things like widescreen resolution
 
 This tool checks whether the patch still matches your actual EXE. If it does, it can make a converted copy of the `.kpatch` for that EXE and update Patch Manager's existing KOTOR 1 address database so the new hash is recognized.
 
+## Download
+
+Download the latest Windows build from the [Releases page](https://github.com/gnw-d3m0/Kotor-KPatch-Adapter/releases/latest).
+
+You can download `KotorKPatchAdapter.exe` directly, or use the release ZIP if you also want a copy of the README and license.
+
+No build script is needed to use the program.
+
 ## What it does
 
 You select:
@@ -111,21 +119,9 @@ The project is written in C# using Windows Forms and targets **.NET Framework 4.
 
 The x86 target is intentional because Kotor Patch Manager ships with a 32-bit `sqlite3.dll`.
 
-### Quick build
+To build it yourself, open `KotorKPatchAdapter.csproj` in Visual Studio with the .NET Framework 4.8 developer tools installed and build **Release / x86**.
 
-On Windows, double-click:
-
-```text
-Build_EXE.bat
-```
-
-The script looks for the .NET Framework C# compiler and builds:
-
-```text
-KotorKPatchAdapter.exe
-```
-
-If the compiler is not available, open `KotorKPatchAdapter.csproj` in Visual Studio with the .NET Framework 4.8 developer tools installed and build the project as **Release / x86**.
+Release builds are compiled automatically on GitHub Actions, so normal users do not need Visual Studio or any build tools.
 
 ## Current limitations
 
