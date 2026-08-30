@@ -45,7 +45,7 @@ This means changes such as these can often be adapted safely when they do not to
 
 - UniWS and other widescreen changes
 - custom resolution patches
-- Large Address Aware / 4 GB flag changes
+- 4 GB flag changes
 - PE checksum changes
 - unrelated executable tweaks
 
