@@ -1,0 +1,59 @@
+name: Publish v0.2.0
+
+on:
+  push:
+    branches:
+      - compat-kpm-0.6.3
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out tested main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build application
+        run: msbuild KotorKPatchAdapter.csproj /m /p:Configuration=Release /p:Platform=x86
+
+      - name: Build smoke tests
+        run: msbuild tests\KotorKPatchAdapter.Tests.csproj /m /p:Configuration=Release /p:Platform=x86
+
+      - name: Run smoke tests
+        run: tests\bin\Release\KotorKPatchAdapter.Tests.exe
+
+      - name: Package release
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force -Path dist | Out-Null
+          Copy-Item "bin\Release\KotorKPatchAdapter.exe" "dist\KotorKPatchAdapter.exe"
+          Copy-Item "README.md" "dist\README.md"
+          Copy-Item "LICENSE" "dist\LICENSE"
+          Compress-Archive -Path "dist\KotorKPatchAdapter.exe", "dist\README.md", "dist\LICENSE" -DestinationPath "dist\KotorKPatchAdapter-v0.2.0.zip" -Force
+
+      - name: Create v0.2.0 release
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          $tag = "v0.2.0"
+          $exe = "dist\KotorKPatchAdapter.exe"
+          $zip = "dist\KotorKPatchAdapter-v0.2.0.zip"
+          $notes = @"
+          Adds support for KotOR Patch Manager 0.6.3, literal generic hooks.toml files, version-specific hook bundles, and metadata-preserving adaptation. Existing manifest and target hashes are retained, generic hooks remain generic, and ambiguous multi-version matches are blocked instead of guessed.
+          "@
+
+          gh release view $tag 2>$null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload $tag $exe $zip --clobber
+          } else {
+            gh release create $tag $exe $zip --target main --title "KOTOR KPatch Adapter v0.2.0" --notes $notes
+          }
