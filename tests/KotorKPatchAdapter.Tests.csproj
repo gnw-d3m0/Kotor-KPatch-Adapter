@@ -33,8 +33,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\src\AdapterCore.cs">
-      <Link>AdapterCore.cs</Link>
+    <Compile Include="..\src\AdapterCore.Pe.cs">
+      <Link>AdapterCore.Pe.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Toml.cs">
+      <Link>AdapterCore.Toml.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Analysis.cs">
+      <Link>AdapterCore.Analysis.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Conversion.cs">
+      <Link>AdapterCore.Conversion.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Reporting.cs">
+      <Link>AdapterCore.Reporting.cs</Link>
     </Compile>
     <Compile Include="TestModels.cs" />
     <Compile Include="SmokeTests.cs" />
