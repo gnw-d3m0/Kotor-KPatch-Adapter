@@ -36,7 +36,11 @@
 
   <ItemGroup>
     <Compile Include="src\Program.cs" />
-    <Compile Include="src\AdapterCore.cs" />
+    <Compile Include="src\AdapterCore.Pe.cs" />
+    <Compile Include="src\AdapterCore.Toml.cs" />
+    <Compile Include="src\AdapterCore.Analysis.cs" />
+    <Compile Include="src\AdapterCore.Conversion.cs" />
+    <Compile Include="src\AdapterCore.Reporting.cs" />
     <Compile Include="src\SqliteNative.cs" />
     <Compile Include="src\MainForm.cs" />
   </ItemGroup>
