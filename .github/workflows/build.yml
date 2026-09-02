@@ -1,0 +1,28 @@
+name: Build and Test
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build application
+        run: msbuild KotorKPatchAdapter.csproj /m /p:Configuration=Release /p:Platform=x86
+
+      - name: Build smoke tests
+        run: msbuild tests\KotorKPatchAdapter.Tests.csproj /m /p:Configuration=Release /p:Platform=x86
+
+      - name: Run smoke tests
+        run: tests\bin\Release\KotorKPatchAdapter.Tests.exe
