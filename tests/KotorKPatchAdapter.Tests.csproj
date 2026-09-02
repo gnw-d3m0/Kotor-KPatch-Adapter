@@ -2,9 +2,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Release</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
-    <OutputType>WinExe</OutputType>
-    <RootNamespace>KotorKPatchAdapter</RootNamespace>
-    <AssemblyName>KotorKPatchAdapter</AssemblyName>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>KotorKPatchAdapter.Tests</RootNamespace>
+    <AssemblyName>KotorKPatchAdapter.Tests</AssemblyName>
+    <StartupObject>KotorKPatchAdapter.Tests.SmokeTests</StartupObject>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -13,15 +14,12 @@
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
     <Optimize>false</Optimize>
     <OutputPath>bin\Debug\</OutputPath>
     <PlatformTarget>x86</PlatformTarget>
-    <DebugType>full</DebugType>
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
@@ -35,14 +33,23 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="src\Program.cs" />
-    <Compile Include="src\AdapterCore.Pe.cs" />
-    <Compile Include="src\AdapterCore.Toml.cs" />
-    <Compile Include="src\AdapterCore.Analysis.cs" />
-    <Compile Include="src\AdapterCore.Conversion.cs" />
-    <Compile Include="src\AdapterCore.Reporting.cs" />
-    <Compile Include="src\SqliteNative.cs" />
-    <Compile Include="src\MainForm.cs" />
+    <Compile Include="..\src\AdapterCore.Pe.cs">
+      <Link>AdapterCore.Pe.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Toml.cs">
+      <Link>AdapterCore.Toml.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Analysis.cs">
+      <Link>AdapterCore.Analysis.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Conversion.cs">
+      <Link>AdapterCore.Conversion.cs</Link>
+    </Compile>
+    <Compile Include="..\src\AdapterCore.Reporting.cs">
+      <Link>AdapterCore.Reporting.cs</Link>
+    </Compile>
+    <Compile Include="TestModels.cs" />
+    <Compile Include="SmokeTests.cs" />
   </ItemGroup>
 
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
