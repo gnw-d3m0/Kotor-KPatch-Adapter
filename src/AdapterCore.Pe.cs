@@ -16,7 +16,7 @@ namespace KotorKPatchAdapter
 {
     internal static partial class AdapterCore
     {
-        public const string Version = "0.2.0";
+        public const string Version = "0.2.1";
         public const string ToolMarker = "KPatch Adapter:";
         public const string CustomVersionKeyPrefix = "kotor1_custom_103_";
 

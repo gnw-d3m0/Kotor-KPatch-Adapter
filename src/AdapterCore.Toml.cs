@@ -18,7 +18,7 @@ namespace KotorKPatchAdapter
     {
         private static Match FindTomlTable(string text, string tableName)
         {
-            return Regex.Match(text,
+            return Regex.Match(StripTomlComments(text),
                 @"(?ms)^[ \t]*\[" + Regex.Escape(tableName) + @"\][ \t]*(?:\#[^\r\n]*)?\r?\n(?<body>.*?)(?=^[ \t]*\[[^\r\n]+\][ \t]*(?:\#[^\r\n]*)?\r?$|\z)");
         }
 
@@ -102,7 +102,11 @@ namespace KotorKPatchAdapter
 
                 if (c == '#')
                 {
-                    while (i < value.Length && value[i] != '\r' && value[i] != '\n') i++;
+                    while (i < value.Length && value[i] != '\r' && value[i] != '\n')
+                    {
+                        output.Append(' ');
+                        i++;
+                    }
                     if (i < value.Length) output.Append(value[i]);
                     continue;
                 }
@@ -129,6 +133,7 @@ namespace KotorKPatchAdapter
 
         private static List<Dictionary<string, string>> ParseHookBlocks(string text)
         {
+            text = StripTomlComments(text);
             List<Dictionary<string, string>> list = new List<Dictionary<string, string>>();
             MatchCollection blocks = Regex.Matches(text,
                 @"(?ms)^[ \t]*\[\[hooks\]\][ \t]*(?:\#[^\r\n]*)?\r?\n?(?<body>.*?)(?=^[ \t]*\[\[hooks\]\][ \t]*(?:\#[^\r\n]*)?\r?$|\z)");
